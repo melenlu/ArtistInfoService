@@ -6,9 +6,8 @@ import java.util.Collection;
 import java.util.LinkedList;
 
 public class Person {
-    String id;
-    String name;
-
+    private String id;
+    private String name;
 
     @SerializedName("release-groups")
     private Collection<Album> albums = new LinkedList<>();

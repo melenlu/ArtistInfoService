@@ -7,7 +7,11 @@ import java.security.cert.X509Certificate;
 
 /**
  * cover arts site doesn'd pass ssl hanshake.
- * I guess their ssl sertificate is overdue.
+ *
+ * ia800602.us.archive.org
+ * java.net.UnknownHostException: ia800602.us.archive.org
+ * 	at java.base/java.net.AbstractPlainSocketImpl.connect
+ *
  * So to get requested data over ssl I disable it
  */
 public class SSLDisabler {
@@ -32,17 +36,11 @@ public class SSLDisabler {
             HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
 
             // Create all-trusting host name verifier
-            HostnameVerifier allHostsValid = new HostnameVerifier() {
-                public boolean verify(String hostname, SSLSession session) {
-                    return true;
-                }
-            };
+            HostnameVerifier allHostsValid = (hostname, session) -> true;
 
             // Install the all-trusting host verifier
             HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (KeyManagementException e) {
+        } catch (NoSuchAlgorithmException | KeyManagementException e) {
             e.printStackTrace();
         }
     }

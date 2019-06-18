@@ -3,11 +3,12 @@ package service.json;
 
 import org.junit.Assert;
 import org.junit.Test;
+import service.json.model.external.Album;
 import service.json.model.external.Artist;
 import service.json.model.external.Pair;
 
 public class JsonConverterTest {
-    JsonConverter converter = new JsonConverter();
+    private JsonConverter converter = new JsonConverter();
 
     @Test
     public void toArtist() {
@@ -22,6 +23,14 @@ public class JsonConverterTest {
 
     @Test
     public void toJson() {
+        Artist artist = new Artist("2", "Vasya");
+        artist.setDescription("Vasya super star");
+        artist.addAlbum(new Album("1", "First"));
+        artist.addAlbum(new Album("2", "Second"));
+        artist.addAlbum(new Album("3", "Third"));
+        String json = converter.toJson(artist);
+        Assert.assertEquals("{\"mbid\":\"2\",\"name\":\"Vasya\",\"description\":\"Vasya super star\",\"albums\":[{\"title\":\"First\",\"id\":\"1\"},{\"title\":\"Second\",\"id\":\"2\"},{\"title\":\"Third\",\"id\":\"3\"}]}",
+                json);
     }
 
     @Test

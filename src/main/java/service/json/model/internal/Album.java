@@ -1,8 +1,8 @@
 package service.json.model.internal;
 
 public class Album {
-    String id;
-    String title;
+    private String id;
+    private String title;
 
     public String getId() {
         return id;

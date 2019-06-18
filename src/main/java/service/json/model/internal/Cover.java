@@ -3,7 +3,7 @@ package service.json.model.internal;
 import java.util.Collection;
 
 public class Cover {
-    Collection<Front> images;
+    private Collection<Front> images;
 
     public Collection<Front> getImages() {
         return images;

@@ -5,9 +5,9 @@ package service.json.model.external;
  */
 public class Album {
 
-    String title;
-    String id;
-    String Image;
+    private String title;
+    private String id;
+    private String Image;
 
     public String getId() {
         return id;

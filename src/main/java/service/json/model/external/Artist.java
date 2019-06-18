@@ -8,12 +8,11 @@ import java.util.LinkedList;
  * Artist entity
  */
 public class Artist {
-    String mbid;
-    String name;
-    String description;
+    private String mbid;
+    private String name;
+    private String description;
 
     private Collection<Album> albums = new LinkedList<>();
-
 
     public Collection<Album> getAlbums() {
         return Collections.unmodifiableCollection(albums);
