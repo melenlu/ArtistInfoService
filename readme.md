@@ -96,9 +96,8 @@ What could be improved:
 There are some things which I would like to do if I had few days more.
 1) make cache to support frequency of requests for objects and when the cache is full and we get a new request we should replace the object with the lowest requests frequency value. So we could keep the most relevant Artists information in cache.
 2) Cache could be resizable and if we are out of memory we could persist objects on disc because reading from disc is usually faster than average remote request time which is about 5 sec.
-3) To hack the musicbarinz requests limitation per second we can build distributed application running on different
-machines and sending request from different ip addresses. So if we will use 10 machines for example we can
-send 10 unique requests per second without loosing the rate. Machines with installed distributed application can share a common cache storage (like db) and additionally manage their own in memory cache. In this case requested resource first should be searched in local cache and if not found - in shared storage.  
+3) System could be distributed and run on different
+machines. Machines with installed distributed application can share a common cache storage (like db) and additionally manage their own in memory cache. In this case requested resource first should be searched in local cache and if not found - in shared storage.  
 
 Link :
 Project repository link : https://github.com/melenlu/ArtistInfoService
