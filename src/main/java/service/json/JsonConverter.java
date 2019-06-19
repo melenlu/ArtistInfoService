@@ -63,7 +63,9 @@ public class JsonConverter {
      * @return JSON string object representation
      */
     public String toJson(Object object){
-        return gson.toJson(object);
+        if (Objects.nonNull(object))
+            return gson.toJson(object);
+        else return Constants.EMPTY_STING;
     }
 
     /**

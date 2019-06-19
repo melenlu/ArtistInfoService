@@ -1,4 +1,4 @@
-package service.threads;
+package service.executors;
 
 import service.Constants;
 import service.json.model.external.Artist;

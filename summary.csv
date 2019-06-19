@@ -1,0 +1,4 @@
+Label,# Samples,Average,Min,Max,Std. Dev.,Error %,Throughput,Received KB/sec,Sent KB/sec,Avg. Bytes
+HTTP Request,10713,18650,0,933538,97764.05,0.000%,3.29484,0.85,0.52,265.0
+parallel bzm - Parallel:HTTP Request,3626,1668993,938741,1722611,123455.86,0.000%,2.10341,0.54,0.33,265.0
+TOTAL,14339,435984,0,1722611,724962.82,0.000%,3.54819,0.92,0.56,265.0

@@ -25,7 +25,4 @@ public class ConsoleLogger {
         isActive =true;
     }
 
-    public static void deactivate(){
-        isActive =false;
-    }
 }

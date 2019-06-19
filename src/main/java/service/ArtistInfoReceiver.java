@@ -1,12 +1,12 @@
 package service;
 
+import service.executors.AlbumCoverArtLogicExecutor;
+import service.executors.PortfolioLogicExecutor;
+import service.executors.Semaphore;
 import service.json.JsonConverter;
 import service.json.model.external.Album;
 import service.json.model.external.Artist;
 import service.json.model.external.Pair;
-import service.threads.AlbumCoverArtLogicExecutor;
-import service.threads.PortfolioLogicExecutor;
-import service.threads.Semaphore;
 import service.util.ConsoleLogger;
 
 import java.io.IOException;
@@ -27,29 +27,43 @@ public class ArtistInfoReceiver {
         return new ArtistInfoReceiver(threadCounter);
     }
 
-    public String getArtistInfoInJSON(String id) {
+    public Artist getArtistInfo(String id) {
         ArtistsCache cache = ArtistsCache.getInstance();
         Artist cachedValue = cache.getArtist(id);
         if (cachedValue != null) {
-            return jsonConverter.toJson(cachedValue);
+            return cachedValue;
         } else {
             return receiveArtist(id);
         }
     }
 
-    private String receiveArtist(String id) {
+    private Artist receiveArtist(String id) {
         String artistFullUrl = Constants.artistUrl + id + Constants.urlParams;//use string builder
         String artistResponse = requestArtistData(artistFullUrl);
-        if (!artistResponse.equals(Constants.EMPTY_STING)) {
+        artistResponse = handleTooManyRequestsError(artistFullUrl, artistResponse);
+        if (!artistResponse.equals(Constants.ERROR_503) && !artistResponse.equals(Constants.EMPTY_STING)) {
             Artist artist = prefillArtist(artistResponse);
             //caching received artist
             ArtistsCache.getInstance().putArtist(artist);
             //return json representation of the artist
-            return jsonConverter.toJson(artist);
+            return artist;
         } else {
             ConsoleLogger.error(new Exception(Constants.ARTIST_NOT_FOUND));
-            return Constants.ARTIST_NOT_FOUND;
+            return null;
         }
+    }
+
+    private String handleTooManyRequestsError(String artistFullUrl, String artistResponse) {
+        if (artistResponse.equals(Constants.ERROR_503)) { //too many requests error
+            //try to request data again after 5 sec
+            try {
+                wait(5000);
+            } catch (InterruptedException e) {
+                ConsoleLogger.error(e);
+            }
+            artistResponse = requestArtistData(artistFullUrl);
+        }
+        return artistResponse;
     }
 
     private Artist prefillArtist(String artistResponse) {
@@ -78,18 +92,20 @@ public class ArtistInfoReceiver {
     }
 
     private String requestArtistData(String fullUrl) {
+        String response = Constants.EMPTY_STING;
         try {
+
             URL url = new URL(fullUrl);
             int statusCode = connect(url);
             if (statusCode == 200) {
-                return readResponse(url);
-            } else {
-                return Constants.EMPTY_STING;
+                response = readResponse(url);
+            } else if (statusCode == 503) {
+                return Constants.ERROR_503;
             }
         } catch (Exception ex) {
             ConsoleLogger.error(ex);
         }
-        return Constants.EMPTY_STING;
+        return response;
     }
 
     private String readResponse(URL url) throws IOException {

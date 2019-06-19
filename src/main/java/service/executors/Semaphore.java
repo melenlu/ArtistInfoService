@@ -1,9 +1,9 @@
-package service.threads;
+package service.executors;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * Semaphore is shared between concurrent threads and counts amount of live threads
+ * Semaphore is shared between concurrent executors and counts amount of live executors
  */
 public class Semaphore {
     //shared atomic integer

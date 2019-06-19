@@ -1,4 +1,4 @@
-package service.threads;
+package service.executors;
 
 import service.Constants;
 import service.json.JsonConverter;
@@ -23,7 +23,7 @@ public abstract class BaseLogicExecutor extends Thread {
     private long endTime;
     private static int CODE_OK = 200;
 
-    protected JsonConverter converter = new JsonConverter();
+    JsonConverter converter = new JsonConverter();
     private Semaphore semaphore;
 
     /**
@@ -50,11 +50,13 @@ public abstract class BaseLogicExecutor extends Thread {
      */
     private void executeTransaction() {
         try {
-            URL url = new URL(requestUrl);
-            int statusCode = connect(url);
-            ConsoleLogger.log("Response received with code " + statusCode);
-            if (statusCode == CODE_OK) {
-                execute(url);
+            if (!requestUrl.isEmpty()) {
+                URL url = new URL(requestUrl);
+                int statusCode = connect(url);
+                ConsoleLogger.log("Response received with code " + statusCode);
+                if (statusCode == CODE_OK) {
+                    execute(url);
+                }
             }
         } catch (Exception ex) {
             ConsoleLogger.error(ex);

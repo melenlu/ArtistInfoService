@@ -11,27 +11,38 @@ import java.util.concurrent.ConcurrentHashMap;
  * Each newly loaded artist replace one old artist object.
  */
 class ArtistsCache {
-    private static ArtistsCache cacheInstance =  new ArtistsCache();
+    private static boolean isActive = true;
+    private static ArtistsCache cacheInstance = new ArtistsCache();
 
     static ArtistsCache getInstance() {
         return cacheInstance;
     }
 
     private static ConcurrentHashMap<String, Artist> cache = new ConcurrentHashMap<>();
-    private final static int CAPACITY=10000;
+    private final static int CAPACITY = 100000;
+
+    static boolean isActive() {
+        return isActive;
+    }
+
+    static void deactivate() {
+        isActive = false;
+    }
 
     Artist getArtist(String id) {
-        if(cache.containsKey(id)){
+        if (isActive && cache.containsKey(id)) {
             return cache.get(id);
         }
         return null;
     }
 
     synchronized void putArtist(Artist artist) {
-        if(cache.size()>=CAPACITY-1){
-            cache.remove(cache.entrySet().iterator().next());
+        if (isActive) {
+            if (cache.size() >= CAPACITY - 1) {
+                cache.remove(cache.entrySet().iterator().next());
+            }
+            cache.put(artist.getMbid(), artist);
+            ConsoleLogger.log("Artist cached");
         }
-        cache.put(artist.getMbid(),artist);
-        ConsoleLogger.log("Artist cached");
     }
 }
